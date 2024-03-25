@@ -1,7 +1,46 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://worldplacestour.com/learn/by-shape/learn-the-country-shapes"
-
+url = "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 html = requests.get(url)
-print(html.text)
+headers = {
+    "User-Agenet": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+}
+
+soup = BeautifulSoup(html.content, "html.parser")
+
+table = soup.find("caption").parent
+rows = table.find_all("tr")
+
+for row in rows[1:]:
+    try:
+        # Find's the src link for the image.
+        src = row.td.span.span.span.img["src"]
+
+        part = src.split(".svg")[0]
+        clean = part.replace("thumb/", "")
+        stripped = clean.strip("//")
+        img_link = "https://{}.svg".format(stripped)
+
+        flag_name = img_link.split("_of_")[1].strip(".svg")
+
+        if "the_" in flag_name:
+            flag_name = flag_name.split("the_")[1]
+
+        print(img_link)
+
+        # The code below downloads all the flag images.
+
+        # filename = img.split("/")[-1]
+
+        # flag = requests.get(img, headers=headers)
+        # if flag.status_code != 200:
+        #     print("Error getting {}".format(filename))
+        # else:
+        #     with open(filename, "wb") as file:
+        #         noop = file.write(flag.content)
+        #         print("Saved {}".format(filename))
+
+    # Exception catches any cases where there is not a proper map row
+    except:
+        pass
