@@ -37,8 +37,6 @@ def getCountryFlags():
 
             flagDict[flag_name] = flag_link
 
-            print(flagDict)
-
             # The code below downloads all the flag images.
 
             # filename = img.split("/")[-1]
@@ -54,6 +52,7 @@ def getCountryFlags():
         # Exception catches any cases where there is not a proper map row
         except:
             pass
+    return flagDict
 
 
-getCountryFlags()
+print(getCountryFlags())
