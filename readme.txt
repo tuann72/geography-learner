@@ -1,4 +1,5 @@
 Packages Installed:
-- Flask
-- Flask Cors
+- flask
+- flask-cors
 - requests
+- BeautifulSoup4

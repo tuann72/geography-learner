@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import unquote
 
 url = "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 html = requests.get(url)
@@ -9,38 +10,50 @@ headers = {
 
 soup = BeautifulSoup(html.content, "html.parser")
 
-table = soup.find("caption").parent
-rows = table.find_all("tr")
 
-for row in rows[1:]:
-    try:
-        # Find's the src link for the image.
-        src = row.td.span.span.span.img["src"]
+def getCountryFlags():
+    flagDict = {}
 
-        part = src.split(".svg")[0]
-        clean = part.replace("thumb/", "")
-        stripped = clean.strip("//")
-        img_link = "https://{}.svg".format(stripped)
+    table = soup.find("caption").parent
+    rows = table.find_all("tr")
 
-        flag_name = img_link.split("_of_")[1].strip(".svg")
+    for row in rows[1:]:
+        try:
+            # Find's the src link for the image.
+            src = row.td.span.span.span.img["src"]
 
-        if "the_" in flag_name:
-            flag_name = flag_name.split("the_")[1]
+            part = src.split(".svg")[0]
+            clean = part.replace("thumb/", "")
+            stripped = clean.strip("//")
+            flag_link = "https://{}.svg".format(stripped)
 
-        print(img_link)
+            flag_name = flag_link.split("Flag_of_")[1].split(".svg")[0]
 
-        # The code below downloads all the flag images.
+            if "_the_" in flag_name:
+                flag_name = flag_name.replace("_the_", " ")
 
-        # filename = img.split("/")[-1]
+            flag_name = unquote(flag_name).replace("_", " ").split("(")[0]
+            flag_name = flag_name.replace("the ", "")
 
-        # flag = requests.get(img, headers=headers)
-        # if flag.status_code != 200:
-        #     print("Error getting {}".format(filename))
-        # else:
-        #     with open(filename, "wb") as file:
-        #         noop = file.write(flag.content)
-        #         print("Saved {}".format(filename))
+            flagDict[flag_name] = flag_link
 
-    # Exception catches any cases where there is not a proper map row
-    except:
-        pass
+            print(flagDict)
+
+            # The code below downloads all the flag images.
+
+            # filename = img.split("/")[-1]
+
+            # flag = requests.get(img, headers=headers)
+            # if flag.status_code != 200:
+            #     print("Error getting {}".format(filename))
+            # else:
+            #     with open(filename, "wb") as file:
+            #         noop = file.write(flag.content)
+            #         print("Saved {}".format(filename))
+
+        # Exception catches any cases where there is not a proper map row
+        except:
+            pass
+
+
+getCountryFlags()
