@@ -7,9 +7,9 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/api", methods=["GET"])
+@app.route("/api/flags", methods=["GET"])
 def return_home():
-    return jsonify({"message": "Hello world"})
+    return getCountryFlags()
 
 
 if __name__ == "__main__":

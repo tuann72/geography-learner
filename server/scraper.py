@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import unquote
+from pprint import pprint
 
 url = "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 html = requests.get(url)
@@ -13,6 +14,9 @@ soup = BeautifulSoup(html.content, "html.parser")
 
 def getCountryFlags():
     flagDict = {}
+
+    country_names = []
+    country_pics = []
 
     table = soup.find("caption").parent
     rows = table.find_all("tr")
@@ -35,7 +39,8 @@ def getCountryFlags():
             flag_name = unquote(flag_name).replace("_", " ").split("(")[0]
             flag_name = flag_name.replace("the ", "")
 
-            flagDict[flag_name] = flag_link
+            country_names.append(flag_name)
+            country_pics.append(flag_link)
 
             # The code below downloads all the flag images.
 
@@ -52,7 +57,11 @@ def getCountryFlags():
         # Exception catches any cases where there is not a proper map row
         except:
             pass
+
+    flagDict["countries"] = []
+    flagDict["countryImg"] = []
+
+    flagDict["countries"].extend(country_names)
+    flagDict["countryImg"].extend(country_pics)
+
     return flagDict
-
-
-print(getCountryFlags())
