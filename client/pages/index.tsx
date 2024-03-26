@@ -9,13 +9,25 @@ function index() {
       fetch("http://localhost:8080/api/flags")
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-      })
+        setCountries(data.countries);
+        setCountryImg(data.countryImg);
+        console.log(data.countries);
+        // console.log(data.countryImg);
+      });
     }, []);
 
 
     return (
-      <div>hello</div>
+      <div>
+          {
+            countryImg.map((link, index)=>(
+              <div key={index}>
+                <img src={link}/>
+                <div>{countries[index]}</div>
+              </div>
+            ))
+          }
+      </div>
   );
 }
 
