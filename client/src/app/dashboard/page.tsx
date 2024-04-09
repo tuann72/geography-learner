@@ -1,6 +1,8 @@
+"use client";
+
 import React, {useEffect, useState} from 'react'
 
-function index() {
+export default function Page() {
 
     const [countries, setCountries] = useState([])
     const [countryImg, setCountryImg] = useState([])
@@ -30,5 +32,3 @@ function index() {
       </div>
   );
 }
-
-export default index
