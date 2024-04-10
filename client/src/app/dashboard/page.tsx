@@ -1,34 +1,16 @@
-"use client";
-
-import React, {useEffect, useState} from 'react'
+import * as React from 'react';
 
 export default function Page() {
-
-    const [countries, setCountries] = useState([])
-    const [countryImg, setCountryImg] = useState([])
-
-    useEffect(() =>{
-      fetch("http://localhost:8080/api/flags")
-      .then(response => response.json())
-      .then(data => {
-        setCountries(data.countries);
-        setCountryImg(data.countryImg);
-        console.log(data.countries);
-        // console.log(data.countryImg);
-      });
-    }, []);
-
-
     return (
-      <div>
-          {
-            countryImg.map((link, index)=>(
-              <div key={index}>
-                <img src={link}/>
-                <div>{countries[index]}</div>
-              </div>
-            ))
-          }
-      </div>
-  );
+    <div className="bg-white flex flex-col h-screen justify-center items-center">
+        <div className="h-1/2 flex flex-col justify-center items-center">
+            <h1 className="text-3xl text-black">Geography Learner</h1>
+            <h2 className="text-black">Select a learning game below!</h2>
+        </div>
+        <div className="grid grid-cols-2 w-2/3 h-1/2 gap-10">
+            <button className="h-1/2 bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded">Button</button>
+            <button className="h-1/2 bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded">Button</button>
+        </div>
+    </div>
+    )
 }
