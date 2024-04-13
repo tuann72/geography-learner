@@ -1,7 +1,8 @@
 "use client";
 
-import React, {useEffect, useState} from 'react'
+import React, {FormEvent, ChangeEvent, useEffect, useState} from 'react'
 import GetRandomNum from '@/utils/randomNum'
+import checkEntry from '@/components/submission';
 
 export default function Page() {
 
@@ -10,6 +11,8 @@ export default function Page() {
     const [countryImg, setCountryImg] = useState([])
     const [index, setIndex] = useState(intialIndex)
     const [score, setScore] = useState(0)
+    const [userInput, setUserInput] = useState("")
+
 
     useEffect(() =>{
       fetch("http://localhost:8080/api/flags")
@@ -36,16 +39,25 @@ export default function Page() {
         <div className="text-black h-2/5 flex flex-col items-center">
           <div className="flex flex-col items-center pb-4">
             <label>Enter the name of the country that matches the flag!</label>
-            <input type="text" id="country_entry" placeholder="Country" className="bg-gray-50 border border-gray-300 w-full h-10 rounded-lg px-2"/>
+            {
+              /* 
+              The input element has two attributes: value and onChange
+              value is set to userInput
+              onChange is set to use handleChange
+              handleChange is a function that takes an event as an argument
+              The event is the input element that is being changed and the value is the value of the input element
+              */
+            }
+            <input type="text" id="country_entry" placeholder="Country"  value={userInput} onChange={e => setUserInput(e.target.value)} className="bg-gray-50 border border-gray-300 w-full h-10 rounded-lg px-2"/>
           </div>
           <div className="grid grid-cols-3 gap-3">
             {/* The onClick event creates a arrow function that calls setIndex
                 setIndex uses useState to update the index state with a random number
                 This updates any component that uses the index state.
             */}
-            <button onClick={() => setScore(1)} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
+            <button onClick={() => checkEntry} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
             <button onClick={() => setIndex(GetRandomNum(0, 233))} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
-            <button className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
+            <button onClick={() => console.log(userInput)}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
           </div>
         </div>
           {
