@@ -1,11 +1,13 @@
 "use client";
 
-import React, {FormEvent, ChangeEvent, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import { useRouter } from 'next/navigation';
 import GetRandomNum from '@/utils/randomNum'
 import checkEntry from '@/components/submission';
 
 export default function Page() {
 
+    const router = useRouter();
     const intialIndex = GetRandomNum(0, 233)
     const [countries, setCountries] = useState([])
     const [countryImg, setCountryImg] = useState([])
@@ -30,9 +32,11 @@ export default function Page() {
       if(result == true){
         setScore(score + 1)
         setCorrection("Correct!")
+        setUserInput("")
       }
       else{
         setCorrection("Incorrect: The flag was from " + countries[index] + ".")
+        setUserInput("")
       }
       setIndex(GetRandomNum(0, 233))
     }
@@ -40,6 +44,7 @@ export default function Page() {
     function skip(){
       setIndex(GetRandomNum(0, 233))
       setCorrection("")
+      setUserInput("")
     }
 
 
@@ -75,7 +80,7 @@ export default function Page() {
             */}
             <button onClick={() => addScore(checkEntry(userInput, countries[index]))} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
             <button onClick={() => skip()} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
-            <button onClick={() => console.log(userInput)}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
+            <button onClick={() => router.push("/dashboard")}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
           </div>
         </div>
           {
