@@ -12,6 +12,7 @@ export default function Page() {
     const [index, setIndex] = useState(intialIndex)
     const [score, setScore] = useState(0)
     const [userInput, setUserInput] = useState("")
+    const [correction, setCorrection] = useState("")
 
 
     useEffect(() =>{
@@ -24,6 +25,22 @@ export default function Page() {
         // console.log(data.countryImg);
       });
     }, []);
+
+    function addScore(result: boolean){
+      if(result == true){
+        setScore(score + 1)
+        setCorrection("Correct!")
+      }
+      else{
+        setCorrection("Incorrect: The flag was from " + countries[index] + ".")
+      }
+      setIndex(GetRandomNum(0, 233))
+    }
+
+    function skip(){
+      setIndex(GetRandomNum(0, 233))
+      setCorrection("")
+    }
 
 
     return (
@@ -48,6 +65,7 @@ export default function Page() {
               The event is the input element that is being changed and the value is the value of the input element
               */
             }
+            <p>{correction}</p>
             <input type="text" id="country_entry" placeholder="Country"  value={userInput} onChange={e => setUserInput(e.target.value)} className="bg-gray-50 border border-gray-300 w-full h-10 rounded-lg px-2"/>
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -55,8 +73,8 @@ export default function Page() {
                 setIndex uses useState to update the index state with a random number
                 This updates any component that uses the index state.
             */}
-            <button onClick={() => checkEntry} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
-            <button onClick={() => setIndex(GetRandomNum(0, 233))} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
+            <button onClick={() => addScore(checkEntry(userInput, countries[index]))} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
+            <button onClick={() => skip()} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
             <button onClick={() => console.log(userInput)}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
           </div>
         </div>
