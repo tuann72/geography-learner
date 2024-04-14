@@ -14,7 +14,7 @@ export default function Page() {
         </div>
         <div className="grid grid-cols-2 w-2/3 h-1/2 gap-10">
             <button onClick={() => router.push("/dashboard/flags")} className="text-xl h-1/2 bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded">Flag Game</button>
-            <button className="text-xl h-1/2 bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded">Button</button>
+            <button onClick={() => router.push("/dashboard/shapes")}className="text-xl h-1/2 bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded">Shape Game</button>
         </div>
     </div>
     )
