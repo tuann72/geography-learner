@@ -19,7 +19,8 @@ URL = "https://worldplacestour.com/learn/by-shape/learn-the-country-shapes"
 
 def intializeScraper():
     driver.get(URL)
-    areaSelection("europe")
+    areaSelection("america")
+    scrapeCountryInfo()
 
 
 def areaSelection(area):
@@ -41,7 +42,18 @@ def areaSelection(area):
 
 
 def scrapeCountryInfo():
-    pass
+    countryName = []
+    emptyIndex = []
+    countryShape = []
+    count = 0
+
+    countryName = driver.find_elements(By.XPATH, "//a[@class='shape-name']")
+    for index in range(len(countryName)):
+        temp = countryName[index].text
+        if temp == "":
+            emptyIndex.append(index)
+
+    print(emptyIndex)
 
 
 def compileData():

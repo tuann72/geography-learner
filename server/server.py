@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from server.soupScraper import getCountryFlags
+from soupScraper import getCountryFlags
 
 # app instance
 app = Flask(__name__)
