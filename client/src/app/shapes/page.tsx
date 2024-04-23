@@ -3,14 +3,12 @@
 import React, {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import GetRandomNum from '@/utils/randomNum'
-import checkEntry from '@/components/submission';
 
 export default function Page() {
 
     const router = useRouter();
     const intialIndex = GetRandomNum(0, 233)
     const [countries, setCountries] = useState([])
-    const [countryImg, setCountryImg] = useState([])
     const [index, setIndex] = useState(intialIndex)
     const [score, setScore] = useState(0)
     const [userInput, setUserInput] = useState("")
@@ -18,12 +16,11 @@ export default function Page() {
 
 
     useEffect(() =>{
-      fetch("http://localhost:8080/api/flags")
+      fetch("http://localhost:8080/api/shapes")
       .then(response => response.json())
       .then(data => {
-        setCountries(data.countries);
-        setCountryImg(data.countryImg);
-        console.log(data.countries);
+        setCountries(data);
+        console.log(countries);
         // console.log(data.countryImg);
       });
     }, []);
@@ -56,41 +53,21 @@ export default function Page() {
           <h2>Score: {score}</h2>
         </div>
         <div className="h-2/5">
-          <img className="h-64 w-100" src={countryImg[index]}/>
+          <img className="h-64 w-100" src={""}/>
         </div>
         <div className="text-black h-2/5 flex flex-col items-center">
           <div className="flex flex-col items-center pb-4">
             <label>Enter the name of the country that matches the flag!</label>
-            {
-              /* 
-              The input element has two attributes: value and onChange
-              value is set to userInput
-              onChange is set to use handleChange
-              handleChange is a function that takes an event as an argument
-              The event is the input element that is being changed and the value is the value of the input element
-              */
-            }
             <p>{correction}</p>
-            <input type="text" id="country_entry" placeholder="Country"  value={userInput} onChange={e => setUserInput(e.target.value)} className="bg-gray-50 border border-gray-300 w-full h-10 rounded-lg px-2"/>
+            <div className="grid grid-cols-5 gap-3">
+              <button className='text-l bg-rose-200 hover:bg-rose-400 px-4 py-2 rounded-lg border border-black'>test</button>
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {/* The onClick event creates a arrow function that calls setIndex
-                setIndex uses useState to update the index state with a random number
-                This updates any component that uses the index state.
-            */}
-            <button onClick={() => addScore(checkEntry(userInput, countries[index]))} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Submit</button>
+          <div className="grid grid-cols-2 gap-3">
             <button onClick={() => skip()} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
-            <button onClick={() => router.push("/dashboard")}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
+            <button onClick={() => router.push("/")}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
           </div>
         </div>
-          {
-            // countryImg.map((link, index)=>(
-            //   <div key={index}>
-            //     <img src={link}/>
-            //     <div>{countries[index]}</div>
-            //   </div>
-            // ))
-          }
       </div>
   );
 }
