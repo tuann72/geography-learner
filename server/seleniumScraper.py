@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import pprint
 
 # Set up the options for the driver
 options = Options()
@@ -24,6 +25,9 @@ def intializeScraper():
 
 
 def areaSelection(area):
+
+    # Clicks on button depending on inputted area.
+
     if area == "america":
         americaBtn = driver.find_element(By.XPATH, "//span[text()='Americas']")
         americaBtn.click()
@@ -42,18 +46,35 @@ def areaSelection(area):
 
 
 def scrapeCountryInfo():
+    # Holds the country names (may contain errors)
     countryName = []
-    emptyIndex = []
+    # Holds the country shapes (may contain errors)
     countryShape = []
-    count = 0
 
+    # These variables hold the corrected versions of the list.
+    countryNameFix = []
+    countryShapeLinks = []
+
+    # The dict that maps country name to country img link
+    countryDict = {}
+
+    # find elements contains shape-name
     countryName = driver.find_elements(By.XPATH, "//a[@class='shape-name']")
+    # find elements containing shape-size (shape link)
+    countryShape = driver.find_elements(By.XPATH, "//img[@class='shape-size']")
     for index in range(len(countryName)):
-        temp = countryName[index].text
-        if temp == "":
-            emptyIndex.append(index)
+        name = countryName[index].text
 
-    print(emptyIndex)
+        # if no errors, we look for name and shape link
+        if name != "":
+            countryNameFix.append(name)
+            countryShapeLinks.append(countryShape[index].get_attribute("src"))
+
+    # create new dict entry
+    for index in range(len(countryNameFix)):
+        countryDict[countryNameFix[index]] = countryShapeLinks[index]
+
+    pprint.pprint(countryDict)
 
 
 def compileData():
