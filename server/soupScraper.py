@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import unquote
-from pprint import pprint
 
 url = "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
 html = requests.get(url)

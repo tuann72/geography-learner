@@ -3,12 +3,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-import time
+from urllib.parse import unquote
 import pprint
 
 # Set up the options for the driver
 options = Options()
-options.add_experimental_option("detach", True)
+options.add_argument("--headless")
 
 # Set up the driver
 driver = webdriver.Chrome(
@@ -20,8 +20,9 @@ URL = "https://worldplacestour.com/learn/by-shape/learn-the-country-shapes"
 
 def intializeScraper():
     driver.get(URL)
-    areaSelection("america")
-    scrapeCountryInfo()
+    countryDict = compileData()
+
+    return countryDict
 
 
 def areaSelection(area):
@@ -67,18 +68,34 @@ def scrapeCountryInfo():
 
         # if no errors, we look for name and shape link
         if name != "":
-            countryNameFix.append(name)
+            countryNameFix.append(unquote(name))
             countryShapeLinks.append(countryShape[index].get_attribute("src"))
 
     # create new dict entry
     for index in range(len(countryNameFix)):
         countryDict[countryNameFix[index]] = countryShapeLinks[index]
 
-    pprint.pprint(countryDict)
+    return countryDict
 
 
 def compileData():
-    pass
+    finalDict = {}
 
+    # We start on america.
 
-intializeScraper()
+    # areaSelection("america")
+    finalDict.update(scrapeCountryInfo())
+
+    areaSelection("africa")
+    finalDict.update(scrapeCountryInfo())
+
+    areaSelection("asia")
+    finalDict.update(scrapeCountryInfo())
+
+    areaSelection("europe")
+    finalDict.update(scrapeCountryInfo())
+
+    areaSelection("oceania")
+    finalDict.update(scrapeCountryInfo())
+
+    return finalDict
