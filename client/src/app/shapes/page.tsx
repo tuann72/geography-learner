@@ -143,7 +143,7 @@ export default function Page() {
         </div>
         <div className="text-black h-2/5 flex flex-col items-center">
           <div className="flex flex-col items-center pb-4">
-            <label>Enter the name of the country that matches the flag!</label>
+            <label>Enter the name of the country that matches the shape!</label>
             <p>{correction}</p>
             <div className="grid grid-cols-5 gap-3">
               <button onClick={() => checkAnswer(index1)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hidden truncate rounded-lg border border-black'>{getName(index1)}</button>
