@@ -38,4 +38,3 @@ next-env.d.ts
 # python
 server/.venv/
 server/__pycache__/
-server/requirements.txt
