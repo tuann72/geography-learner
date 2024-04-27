@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import GetRandomNum from '@/utils/randomNum'
-
 interface shapeData{
   country: string;
   imageUrl: string;
@@ -18,20 +17,11 @@ export default function Page() {
     const [index3, setIndex3] = useState(0);
     const [index4, setIndex4] = useState(0);
     const [index5, setIndex5] = useState(0);
+    const [selectIndex, setSelectIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [correction, setCorrection] = useState("");
 
 
-    useEffect(() =>{
-      fetch("http://localhost:8080/api/shapes")
-      .then(response => response.json())
-      .then(data => {
-        const shapesArray : shapeData[] = Object.entries(data).map(([country, imageUrl]) => ({
-          country, imageUrl: imageUrl as string
-        }));
-        setCountries(shapesArray);
-      });
-    }, []);
 
     function getShape(index: number){
       return countries[index]?.imageUrl
@@ -41,105 +31,134 @@ export default function Page() {
       return countries[index]?.country
     }
 
-    function addScore(result: boolean){
-      if(result == true){
+    function checkAnswer(index: number){
+      if(index == selectIndex){
         setScore(score + 1)
         setCorrection("Correct!")
       }
       else{
-        setCorrection("")
+        setCorrection("Incorrect. Answer is " + getName(selectIndex))
       }
-      setIndex1(GetRandomNum(0, 233))
+      setOptions()
     }
 
     function skip(){
-      setIndex1(GetRandomNum(0, 243))
+      setOptions()
       setCorrection("")
     }
 
     function setOptions(){
-      setIndex1(GetRandomNum(0, 243));
-      let correctIndex = index1;
+      setIndex1(GetRandomNum(0, 242));
+      let Index = index1;
 
-      let wrongIndex1 = GetRandomNum(0,243);
+      let Index1 = GetRandomNum(0,242);
       while(true){
-        if(wrongIndex1 == correctIndex){
-          wrongIndex1 = GetRandomNum(0, 243);
+        if(Index1 == Index){
+          Index1 = GetRandomNum(0, 242);
         }
         else{
           break;
         }
       }
-      let wrongIndex2 = GetRandomNum(0,243);
+      let Index2 = GetRandomNum(0,243);
       while(true){
-        if(wrongIndex2 == correctIndex || wrongIndex2 == wrongIndex1){
-          wrongIndex2 = GetRandomNum(0, 243);
+        if(Index2 == Index || Index2 == Index1){
+          Index2 = GetRandomNum(0, 243);
         }
         else{
           break;
         }
       }
-      let wrongIndex3 = GetRandomNum(0,243);
+      let Index3 = GetRandomNum(0,243);
       while(true){
-        if(wrongIndex3 == correctIndex || wrongIndex3 == wrongIndex2 || wrongIndex3 == wrongIndex1){
-          wrongIndex3 = GetRandomNum(0, 243);
+        if(Index3 == Index || Index3 == Index2 || Index3 == Index1){
+          Index3 = GetRandomNum(0, 243);
         }
         else{
           break;
         }
       }
-      let wrongIndex4 = GetRandomNum(0,243);
+      let Index4 = GetRandomNum(0,243);
       while(true){
-        if(wrongIndex4 == correctIndex || wrongIndex4 == wrongIndex3 || wrongIndex4 == wrongIndex2 || wrongIndex4 == wrongIndex1){
-          wrongIndex4 = GetRandomNum(0, 243);
+        if(Index4 == Index || Index4 == Index3 || Index4 == Index2 || Index4 == Index1){
+          Index4 = GetRandomNum(0, 243);
         }
         else{
           break;
         }
       }
 
-      setIndex2(wrongIndex1)
-      setIndex3(wrongIndex2)
-      setIndex4(wrongIndex3)
-      setIndex5(wrongIndex4)
+      setIndex2(Index1)
+      setIndex3(Index2)
+      setIndex4(Index3)
+      setIndex5(Index4)
 
-      console.log(index1)
-      console.log(index2)
-      console.log(index3)
-      console.log(index4)
-      console.log(index5)
+      const randNum = GetRandomNum(0,4)
+
+      if(randNum == 0){
+        setSelectIndex(Index)
+      }
+      else if(randNum == 1){
+        setSelectIndex(Index1)
+      }
+      else if(randNum == 2){
+        setSelectIndex(Index2)
+      }
+      else if(randNum == 3){
+        setSelectIndex(Index4)
+      }
+      else{
+        setSelectIndex(Index4)
+      }
     }
 
-    console.log(countries.length)
-
-
+    useEffect(() =>{
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:8080/api/shapes");
+          const data = await response.json();
+          const shapesArray: shapeData[] = Object.entries(data).map(([country, imageUrl]) => ({
+            country,
+            imageUrl: imageUrl as string
+          }));
+          setCountries(shapesArray);
+          setOptions();
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+    
+      fetchData();
+      
+    }, []);
     return (
 
-
-      
       <div className="bg-sky-50 h-screen flex flex-col items-center">
         <div className="text-black h-1/5 flex flex-col justify-end items-center py-10">
           <h1 className="text-3xl">Shape Game</h1>
           <h2>Score: {score}</h2>
         </div>
         <div className="h-2/5">
-          <img className="h-64 w-100" src={getShape(0)}/>
+          <img className="h-64 w-100" src={getShape(selectIndex)}/>
         </div>
         <div className="text-black h-2/5 flex flex-col items-center">
           <div className="flex flex-col items-center pb-4">
             <label>Enter the name of the country that matches the flag!</label>
             <p>{correction}</p>
             <div className="grid grid-cols-5 gap-3">
-              <button className='text-l bg-slate-200 hover:bg- px-4 py-2 rounded-lg border border-black'>test</button>
+              <button onClick={() => checkAnswer(index1)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hidden truncate rounded-lg border border-black'>{getName(index1)}</button>
+              <button onClick={() => checkAnswer(index2)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hidden truncate rounded-lg border border-black'>{getName(index2)}</button>
+              <button onClick={() => checkAnswer(index3)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hidden truncate rounded-lg border border-black'>{getName(index3)}</button>
+              <button onClick={() => checkAnswer(index4)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hiddenx truncate rounded-lg border border-black'>{getName(index4)}</button>
+              <button onClick={() => checkAnswer(index5)} className='text-l bg-slate-200 hover:bg- px-4 py-2 overflow-hidden truncate rounded-lg border border-black'>{getName(index5)}</button>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <button onClick={() => skip()} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
+            <button onClick={skip} className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Skip</button>
             <button onClick={() => router.push("/")}className="text-l text-white bg-cyan-700 hover:bg-cyan-950 px-4 py-2 rounded-lg border border-gray-300">Home</button>
           </div>
         </div>
         <div>
-        <p>{getName(0)}</p>
        </div>
       </div>
       // <div>
